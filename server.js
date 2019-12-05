@@ -6,7 +6,8 @@ const cors = require("cors");
 const server = express();
 
 server.use(express.json());
-
+console.log("yo")
+console.log("hello")
 server.use(cors("*"));
 
 
