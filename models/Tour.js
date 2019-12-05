@@ -7,6 +7,7 @@ const TourSchema = new Schema({
         type: String,
     },
     dates: [Date],
+    // revoir si c'est bien un array of Date qu'on veut
     maxPeople: Number,
     thematics: {
         type: [String],
