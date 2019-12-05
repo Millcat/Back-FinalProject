@@ -11,7 +11,7 @@ const TourSchema = new Schema({
     maxPeople: Number,
     thematics: {
         type: [String],
-        enum: ["food", "street art", "fashion", "cinema", "insolite", "monument", "relax", "art"],
+        enum: ["Food", "Street Art", "Fashion", "Cinema", "Insolite", "Monument", "Art", "Sports"],
     },
     description: String,
     duration: String,
