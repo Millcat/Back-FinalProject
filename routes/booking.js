@@ -3,11 +3,11 @@ const router = new express.Router();
 const bookingModel = require("./../models/Booking");
 
 
-
+// marche pas sur POSTMAN car need to populate
 router.post("/booking", (req, res) => {
     bookingModel
         .populate("tour")
-        .populate("booker")
+        .populate("user")
         .create(req.body)
         .then(dbRes => {
             res.status(200).json(dbRes);

@@ -5,4 +5,7 @@ const router = new express.Router();
 // const bcryptSalt = 10;
 // const uploader = require("./../config/cloudinary");
 
+
+// ATTENDRE COURS AVEC GUILLAUME
+
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const tourModel = require("./../models/Tour");
 
+//tested with POSTMAN => OK
 router.get("/tours", (req, res) => {
     tourModel
         .find()
@@ -13,6 +14,7 @@ router.get("/tours", (req, res) => {
         });
 });
 
+// tested with POSTMAN => OK
 router.get("/tours/:id", (req, res) => {
     tourModel
         .findById(req.params.id)
@@ -24,6 +26,7 @@ router.get("/tours/:id", (req, res) => {
         });
 });
 
+// tested with POSTMAN => OK
 router.post("/tours", (req, res) => {
     tourModel
         .create(req.body)
@@ -35,6 +38,7 @@ router.post("/tours", (req, res) => {
         });
 });
 
+// tested with POSTMAN => no error but no update..
 router.patch("/tours/:id", (req, res) => {
     tourModel
         .findByIdAndUpdate(req.params.id)
@@ -47,7 +51,7 @@ router.patch("/tours/:id", (req, res) => {
         });
 })
 
-
+// tested with POSTMAN => OK
 router.delete("/tours/:id", (req, res) => {
     tourModel
         .findByIdAndRemove(req.params.id)
