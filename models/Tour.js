@@ -17,7 +17,10 @@ const TourSchema = new Schema({
     duration: String,
     itinerary: [String],
     meetingLocation: String,
-    languages: [String],
+    languages: {
+        type: [String],
+        enum: ["French", "English", "Japanese", "German", "Spanish", "Chinese", "Russian"],
+    },
     price: Number,
     user: {
         type: Schema.Types.ObjectId,
