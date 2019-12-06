@@ -10,7 +10,7 @@ const TourSchema = new Schema({
     // revoir si c'est bien un array of Date qu'on veut
     maxPeople: Number,
     thematics: {
-        type: [String],
+        type: String,
         enum: ["Food", "Street Art", "Fashion", "Cinema", "Insolite", "Monument", "Art", "Sports"],
     },
     description: String,
