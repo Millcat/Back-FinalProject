@@ -48,15 +48,15 @@ router.post("/tours",
 // tested with POSTMAN => no error but no update..
 router.patch("/tours/:id", (req, res) => {
     tourModel
-        .findByIdAndUpdate(req.params.id)
+        .findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then(dbRes => {
-            res.status(200).json(dbRes);
+            res.status(200).send(dbRes);
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json(err);
+            res.status(500).send(err);
         });
-})
+});
 
 // tested with POSTMAN => OK
 router.delete("/tours/:id", (req, res) => {
