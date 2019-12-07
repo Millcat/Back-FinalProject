@@ -13,7 +13,7 @@ router.get("/tours", (req, res) => {
     })
     .catch(dbErr => {
       res.status(500).json(dbErr);
-      console.log(dbErr);
+      console.log(dbErr)
     });
 });
 
@@ -34,33 +34,39 @@ router.get("/tours/:id", (req, res) => {
 
 // add protectUserRoute before uploader.single
 // tested with POSTMAN => OK
-router.post("/tours", uploader.single("tourPicture"), (req, res) => {
-  if (req.file) req.body.tourPicture = req.file.secure_url;
-  console.log(req.file);
-  tourModel
-    .create(req.body)
-    .then(dbRes => {
-      res.status(200).json(dbRes);
-    })
-    .catch(dbErr => {
-      console.log(dbErr);
-      res.status(500).json(dbErr);
-    });
-});
+router.post("/tours",
+  uploader.single("tourPicture"), (req, res) => {
+    if (req.file) req.body.tourPicture = req.file.secure_url;
+    // console.log(req.file)
+
+    const newTour = {
+      ...req.body,
+      languages: req.body.languages.split(',')
+    };
+
+    tourModel
+      .create(newTour)
+      .then(dbRes => {
+        res.status(200).json(dbRes);
+      })
+      .catch(dbErr => {
+        console.log(dbErr)
+        res.status(500).json(dbErr);
+      });
+  });
 
 // tested with POSTMAN => no error but no update..
 router.patch("/tours/:id", (req, res) => {
   tourModel
-
     .findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(dbRes => {
-      res.status(200).send(dbRes);
+      res.status(200).json(dbRes);
     })
     .catch(err => {
       console.log(err);
-      res.status(500).send(err);
+      res.status(500).json(err);
     });
-});
+})
 
 // tested with POSTMAN => OK
 router.delete("/tours/:id", (req, res) => {
@@ -73,6 +79,6 @@ router.delete("/tours/:id", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-});
+})
 
 module.exports = router;

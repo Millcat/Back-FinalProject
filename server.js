@@ -34,15 +34,20 @@ server.use(
   })
 );
 
+
 ////// ROUTING
 const authRouter = require("./routes/auth");
 const toursRouter = require("./routes/tours");
 const bookingRouter = require("./routes/booking");
+const filterRouter = require("./routes/filter");
 // const shopCartRouter = require("./routes/shopcart");
 
 server.use(authRouter);
 server.use(toursRouter);
 server.use(bookingRouter);
+server.use(filterRouter);
+// server.use(shopCartRouter);
+
 
 server.listen(process.env.PORT, () => {
   console.log(
