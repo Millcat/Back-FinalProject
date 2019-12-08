@@ -15,6 +15,17 @@ router.post("/booking", (req, res) => {
         });
 });
 
+router.get("/booking", (req, res) => {
+    bookingModel
+        .find()
+        .then(dbRes => {
+            res.status(200).json(dbRes);
+        })
+        .catch(dbErr => {
+            res.status(500).json(dbErr);
+        });
+});
+
 router.get("/booking/:id", (req, res) => {
     // populate le tour model dans la Shop Cart
     bookingModel
@@ -27,5 +38,17 @@ router.get("/booking/:id", (req, res) => {
         });
 });
 
+router.patch("/booking/:id", (req, res) => {
+    // populate le tour model dans la Shop Cart
+    bookingModel
+        .findByIdandUpdate(req.params.id, req.body, { new: true })
+        .then(dbRes => {
+            res.status(200).json(dbRes);
+        })
+        .catch(dbErr => {
+            res.status(500).json(dbErr);
+        });
+});
 
 module.exports = router;
+

@@ -1,84 +1,105 @@
 const express = require("express");
-const router = new express.Router();
-const userModel = require("../models/User");
-// var bcrypt = require("bcryptjs");
-// var salt = bcrypt.genSaltSync(10);
-// var hash = bcrypt.hashSync("B4c0//", salt);
+const authRouter = express.Router();
 const uploader = require("./../config/cloudinary");
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
+const userModel = require("../models/User");
 
-router.get("/signup", (req, res) => {
-  res.render("auth/signup", {});
-});
+// SIGN UP ROUTE : TESTED WITH POSTMAN => OK !!! Login afier doesn't work
+authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
 
-router.post("/signup", uploader.single("userPicture"), (req, res, next) => {
-  const newUser = req.body;
-  if (req.file) {
-    newUser.userPicture = req.file.secure_url;
+  if (!username || !password) {
+    res.status(400).json({ message: "Provide username and password" });
+    return;
   }
 
-  userModel
-    .findOne({
-      email: newUser.email
-    })
-    .then(user => {
-      if (user !== null) {
-        res.redirect("/inspire-me");
-        return;
-      }
-      const salt = bcrypt.genSaltSync(bcryptSalt);
-      const hashed = bcrypt.hashSync(newUser.password, salt);
-      newUser.password = hashed;
-      userModel
-        .create(newUser)
-        .then(userRes => {
-          req.session.currentUser = userRes;
-          res.redirect("/inspire-me");
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    })
-    .catch(error => {
-      next(error);
+  if (password.length < 7) {
+    res.status(400).json({
+      message:
+        "Please make your password at least 8 characters long for security purposes."
     });
-});
+    return;
+  }
 
-router.get("/signin", (req, res) => {
-  res.render("auth/signin");
-});
+  userModel.findOne({ username }, (err, foundUser) => {
+    if (err) {
+      res.status(500).json({ message: "Username check went bad." });
+      return;
+    }
 
-router.post("/signin", (req, res) => {
-  const theEmail = req.body.email;
-  const thePassword = req.body.password;
+    if (foundUser) {
+      res.status(400).json({ message: "Username taken. Choose another one." });
+      return;
+    }
+  });
+
+  const salt = bcrypt.genSaltSync(10);
+  const hashPass = bcrypt.hashSync(password, salt);
 
   userModel
-    .findOne({ email: theEmail })
-    .then(user => {
-      if (!user) {
-        req.flash("error", "Wrong credentials");
-        res.redirect("/auth/signin");
-        return;
-      }
-      if (bcrypt.compareSync(thePassword, user.password)) {
-        // Save the login in the session!
-        req.session.currentUser = user;
-        res.redirect("/inspire-me");
-      } else {
-        res.redirect("/signin", {
-          // msg: "Incorrect password"
-        });
-      }
+    .create(req.body, (req.body.password = hashPass))
+    .then(dbRes => {
+      res.status(200).json(dbRes);
     })
-    .catch(error => {
-      next(error);
+    .catch(dbErr => {
+      res.status(400).json(dbErr);
     });
-});
 
-router.get("/logout", (req, res, next) => {
-  req.session.destroy(err => {
-    res.locals.isLoggedIn = false;
-    res.redirect("/auth/signin");
+  // Automatically log in user after sign up
+  req.login(User => {
+    User.findById(req.params.id, req.body, { new: true })
+      .then(dbRes => {
+        res.status(200).json(dbRes);
+      })
+      .catch(dbRes => {
+        res.status(500).json(dbRes);
+      });
   });
 });
 
-module.exports = router;
+// LOGIN ROUTE
+authRouter.post("/signin", (req, res, next) => {
+  passport.authenticate("local", (err, theUser, failureDetails) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong authenticating user" });
+      return;
+    }
+
+    if (!theUser) {
+      // "failureDetails" contains the error messages
+      // from our logic in "LocalStrategy" { message: '...' }.
+      res.status(401).json(failureDetails);
+      return;
+    }
+
+    // save user in session
+    req.login(theUser, err => {
+      if (err) {
+        res.status(500).json({ message: "Session save went bad." });
+        return;
+      }
+      // We are now logged in (that's why we can also send req.user)
+      res.status(200).json(theUser);
+    });
+  })(req, res, next);
+});
+
+//LOG OUT ROUTE
+authRouter.post("/logout", (req, res, next) => {
+  req.logout();
+  res.status(200).json({ message: "Log out success!" });
+});
+
+authRouter.get("/signin", (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json(req.user);
+    return;
+  }
+  res.status(403).json({ message: "Unauthorized" });
+});
+
+module.exports = authRouter;

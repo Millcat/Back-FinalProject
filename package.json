@@ -18,12 +18,16 @@
   },
   "homepage": "https://github.com/Millcat/Back-FinalProject#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cloudinary": "^1.17.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "mongoose": "^5.7.13",
     "multer": "^1.4.2",
-    "multer-storage-cloudinary": "^2.2.1"
+    "multer-storage-cloudinary": "^2.2.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }
