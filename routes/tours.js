@@ -3,12 +3,19 @@ const router = new express.Router();
 const tourModel = require("./../models/Tour");
 const uploader = require("./../config/cloudinary");
 
-//tested with POSTMAN => OK
-router.get("/tours", (req, res) => {
+router.post("/toursFiltered", (req, res) => {
+  // received an array of string from axios (AllTours.jsx)
+  // mongoDB request:
+  const queryThematics = req.body.length > 0 // if there is filtered names (the array of filtered names is > 0)
+    ? { thematics: { $in: req.body } } // ==> then do the query to MongoDB
+    : {};  // ==> or send an ampty array (and find({}) in mongoDB returns all the items)
+
   tourModel
-    .find()
+    .find(queryThematics)
     .populate("users")
     .then(dbRes => {
+      console.log("------------------")
+      console.log(dbRes)
       res.status(200).json(dbRes);
     })
     .catch(dbErr => {
@@ -17,7 +24,6 @@ router.get("/tours", (req, res) => {
     });
 });
 
-// tested with POSTMAN => OK
 router.get("/tours/:id", (req, res) => {
   tourModel
     .findById(req.params.id)
@@ -33,7 +39,6 @@ router.get("/tours/:id", (req, res) => {
 });
 
 // add protectUserRoute before uploader.single
-// tested with POSTMAN => OK
 router.post("/tours",
   uploader.single("tourPicture"), (req, res) => {
     if (req.file) req.body.tourPicture = req.file.secure_url;
