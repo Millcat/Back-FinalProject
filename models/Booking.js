@@ -11,7 +11,7 @@ const bookingSchema = new Schema({
     ref: "Tour"
   },
   date: Date,
-  maxPeople: Number,
+  participants: Number,
   totalPrice: Number,
   Status: {
     type: [String],
