@@ -6,8 +6,7 @@ const TourSchema = new Schema({
   tourPicture: {
     type: String
   },
-  dates: [Date],
-  // revoir si c'est bien un array of Date qu'on veut
+  date: Date,
   maxPeople: Number,
   thematics: {
     type: String,
