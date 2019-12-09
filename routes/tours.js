@@ -12,10 +12,12 @@ router.post("/toursFiltered", (req, res) => {
     $and: [{}, {}] // ==> send an ampty array (and find({}) in mongoDB returns all the items)
   };
 
-  if (filtersNames.thematicsNames && filtersNames.thematicsNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+  if (filtersNames.thematicsNames && filtersNames.thematicsNames.length > 0) {
+    // if there is filtered names (the array of filtered names is > 0)
     query.$and[0].thematics = { $in: filtersNames.thematicsNames };
   }
-  if (filtersNames.languagesNames && filtersNames.languagesNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+  if (filtersNames.languagesNames && filtersNames.languagesNames.length > 0) {
+    // if there is filtered names (the array of filtered names is > 0)
     query.$and[1].languages = { $in: filtersNames.languagesNames };
   }
 
@@ -23,13 +25,13 @@ router.post("/toursFiltered", (req, res) => {
     .find(query)
     .populate("users")
     .then(dbRes => {
-      console.log("------------------")
-      console.log(dbRes)
+      console.log("------------------");
+      console.log(dbRes);
       res.status(200).json(dbRes);
     })
     .catch(dbErr => {
       res.status(500).json(dbErr);
-      console.log(dbErr)
+      console.log(dbErr);
     });
 });
 
@@ -48,26 +50,25 @@ router.get("/tours/:id", (req, res) => {
 });
 
 // add protectUserRoute before uploader.single
-router.post("/tours",
-  uploader.single("tourPicture"), (req, res) => {
-    if (req.file) req.body.tourPicture = req.file.secure_url;
-    // console.log(req.file)
+router.post("/tours", uploader.single("tourPicture"), (req, res) => {
+  if (req.file) req.body.tourPicture = req.file.secure_url;
+  // console.log(req.file)
 
-    const newTour = {
-      ...req.body,
-      languages: req.body.languages.split(',')
-    };
+  const newTour = {
+    ...req.body,
+    languages: req.body.languages.split(",")
+  };
 
-    tourModel
-      .create(newTour)
-      .then(dbRes => {
-        res.status(200).json(dbRes);
-      })
-      .catch(dbErr => {
-        console.log(dbErr)
-        res.status(500).json(dbErr);
-      });
-  });
+  tourModel
+    .create(newTour)
+    .then(dbRes => {
+      res.status(200).json(dbRes);
+    })
+    .catch(dbErr => {
+      console.log(dbErr);
+      res.status(500).json(dbErr);
+    });
+});
 
 // tested with POSTMAN => no error but no update..
 router.patch("/tours/:id", (req, res) => {
@@ -80,7 +81,7 @@ router.patch("/tours/:id", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-})
+});
 
 // tested with POSTMAN => OK
 router.delete("/tours/:id", (req, res) => {
@@ -93,6 +94,6 @@ router.delete("/tours/:id", (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
-})
+});
 
 module.exports = router;

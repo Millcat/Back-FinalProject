@@ -4,9 +4,6 @@
 // const bookingModel = require("../models/Booking");
 // const userModel = require("../models/User");
 
-
-
-
 // router.get("/shopcart", (req, res) => {
 //     tourModel
 //         .findById(req.params)
@@ -19,7 +16,6 @@
 //         });
 // });
 
-
 // router.post("/tours", (req, res) => {
 //     tourModel
 //         .create(req.body)
@@ -30,7 +26,6 @@
 //             res.status(500).json(dbErr);
 //         });
 // });
-
 
 // router.delete("/tours/:id", (req, res) => {
 //     tourModel
