@@ -12,10 +12,10 @@ router.post("/toursFiltered", (req, res) => {
     $and: [{}, {}] // ==> send an ampty array (and find({}) in mongoDB returns all the items)
   };
 
-  if (filtersNames.thematicsNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+  if (filtersNames.thematicsNames && filtersNames.thematicsNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
     query.$and[0].thematics = { $in: filtersNames.thematicsNames };
   }
-  if (filtersNames.languagesNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+  if (filtersNames.languagesNames && filtersNames.languagesNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
     query.$and[1].languages = { $in: filtersNames.languagesNames };
   }
 
