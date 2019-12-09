@@ -6,12 +6,21 @@ const uploader = require("./../config/cloudinary");
 router.post("/toursFiltered", (req, res) => {
   // received an array of string from axios (AllTours.jsx)
   // mongoDB request:
-  const queryThematics = req.body.length > 0 // if there is filtered names (the array of filtered names is > 0)
-    ? { thematics: { $in: req.body } } // ==> then do the query to MongoDB
-    : {};  // ==> or send an ampty array (and find({}) in mongoDB returns all the items)
+  let filtersNames = req.body;
+
+  const query = {
+    $and: [{}, {}] // ==> send an ampty array (and find({}) in mongoDB returns all the items)
+  };
+
+  if (filtersNames.thematicsNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+    query.$and[0].thematics = { $in: filtersNames.thematicsNames };
+  }
+  if (filtersNames.languagesNames.length > 0) { // if there is filtered names (the array of filtered names is > 0)
+    query.$and[1].languages = { $in: filtersNames.languagesNames };
+  }
 
   tourModel
-    .find(queryThematics)
+    .find(query)
     .populate("users")
     .then(dbRes => {
       console.log("------------------")
