@@ -55,6 +55,7 @@ router.post("/tours", uploader.single("tourPicture"), (req, res) => {
   // console.log(req.file)
 
   const newTour = {
+    dates: [req.body.startDate, req.body.endDate],
     ...req.body,
     languages: req.body.languages.split(",")
   };

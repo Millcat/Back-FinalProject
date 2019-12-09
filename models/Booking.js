@@ -13,10 +13,7 @@ const bookingSchema = new Schema({
   date: Date,
   participants: Number,
   totalPrice: Number,
-  Status: {
-    type: [String],
-    enum: ["added to card", "validated"]
-  }
+  isValidated: Boolean
 });
 
 const bookingModel = mongoose.model("Booking", bookingSchema);

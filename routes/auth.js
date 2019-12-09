@@ -33,29 +33,19 @@ authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
       res.status(400).json({ message: "Username taken. Choose another one." });
       return;
     }
-  });
 
-  const salt = bcrypt.genSaltSync(10);
-  const hashPass = bcrypt.hashSync(password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    const hashPass = bcrypt.hashSync(password, salt);
+    req.body.password = hashPass;
 
-  userModel
-    .create(req.body, (req.body.password = hashPass))
-    .then(dbRes => {
-      res.status(200).json(dbRes);
-    })
-    .catch(dbErr => {
-      res.status(400).json(dbErr);
-    });
-
-  // Automatically log in user after sign up
-  req.login(User => {
-    User.findById(req.params.id, req.body, { new: true })
-      .then(dbRes => {
-        res.status(200).json(dbRes);
+    userModel
+      .create(req.body)
+      .catch(dbErr => res.status(400).json(dbErr))
+      .then(user => {
+        // Automatically log in user after sign up
+        req.login(user, () => res.status(200).json(user));
       })
-      .catch(dbRes => {
-        res.status(500).json(dbRes);
-      });
+      .catch(dbRes => res.status(500).json(dbRes));
   });
 });
 
