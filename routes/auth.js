@@ -5,7 +5,7 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const userModel = require("../models/User");
 
-// SIGN UP ROUTE : TESTED WITH POSTMAN => OK !!! Login afier doesn't work
+// SIGN UP ROUTE : TESTED WITH POSTMAN => OK !!! Login after doesn't work
 authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -59,7 +59,7 @@ authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
   });
 });
 
-// LOGIN ROUTE
+// LOGIN ROUTE => OK ON POSTMAN
 authRouter.post("/signin", (req, res, next) => {
   passport.authenticate("local", (err, theUser, failureDetails) => {
     if (err) {
@@ -88,7 +88,7 @@ authRouter.post("/signin", (req, res, next) => {
   })(req, res, next);
 });
 
-//LOG OUT ROUTE
+//LOG OUT ROUTE => OK ON POSTMAN
 authRouter.post("/logout", (req, res, next) => {
   req.logout();
   res.status(200).json({ message: "Log out success!" });
