@@ -3,6 +3,18 @@ const router = new express.Router();
 const tourModel = require("./../models/Tour");
 const uploader = require("./../config/cloudinary");
 
+router.get("/tours", (req, res) => {
+  tourModel
+    .find()
+    .then(dbRes => {
+      res.status(200).json(dbRes);
+    })
+    .catch(dbErr => {
+      res.status(500).json(dbErr);
+      console.log(dbErr);
+    });
+});
+
 router.post("/toursFiltered", (req, res) => {
   // received an array of string from axios (AllTours.jsx)
   // mongoDB request:
