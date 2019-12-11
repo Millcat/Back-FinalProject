@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const userModel = require("../models/User");
 
 // SIGN UP ROUTE : TESTED WITH POSTMAN => OK !!! Login after doesn't work
-authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
+authRouter.post("/signup", uploader.single("userPicture"), (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -15,7 +15,7 @@ authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
     return;
   }
 
-  if (password.length < 7) {
+  if (password.length < 4) {
     res.status(400).json({
       message:
         "Please make your password at least 8 characters long for security purposes."
@@ -37,13 +37,14 @@ authRouter.post("/signup", uploader.single("tourPicture"), (req, res, next) => {
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
     req.body.password = hashPass;
+    if (req.file) req.body.userPicture = req.file.secure_url;
 
     userModel
       .create(req.body)
       .catch(dbErr => res.status(400).json(dbErr))
       .then(user => {
         // Automatically log in user after sign up
-        req.login(user, () => res.status(200).json(user));
+        req.login(user, () => res.status(200).json(req.user));
       })
       .catch(dbRes => res.status(500).json(dbRes));
   });
@@ -73,9 +74,19 @@ authRouter.post("/signin", (req, res, next) => {
         return;
       }
       // We are now logged in (that's why we can also send req.user)
+      console.log(req.user)
       res.status(200).json(theUser);
     });
   })(req, res, next);
+});
+
+authRouter.get("/user/:id", async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id).populate("tours");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 //LOG OUT ROUTE => OK ON POSTMAN
@@ -90,6 +101,25 @@ authRouter.get("/signin", (req, res, next) => {
     return;
   }
   res.status(403).json({ message: "Unauthorized" });
+});
+
+authRouter.use("/is-loggedin", (req, res, next) => {
+  if (req.isAuthenticated()) {
+    // method provided by passport
+    const { _id, userPicture, username, age, email, password, description } = req.user;
+    return res.status(200).json({
+      currentUser: {
+        _id,
+        userPicture,
+        username,
+        age,
+        email,
+        password,
+        description
+      }
+    });
+  }
+  res.status(403).json("Unauthorized");
 });
 
 module.exports = authRouter;

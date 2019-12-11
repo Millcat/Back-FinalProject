@@ -38,10 +38,15 @@ const TourSchema = new Schema({
     ]
   },
   price: Number,
-  users: {
+  rate: String,
+  guide: {
     type: Schema.Types.ObjectId,
     ref: "User"
   },
+  buyers: [{
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  }],
   totalParticipants: Number, // qui sera updaté en fonction des bookings
   bookings: [
     {

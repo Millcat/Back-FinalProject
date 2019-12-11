@@ -51,7 +51,7 @@ router.get("/tours/:id", (req, res) => {
   tourModel
     .findById(req.params.id)
     .populate("bookings")
-    .populate("users")
+    .populate("user")
     .then(dbRes => {
       console.log(dbRes);
       res.status(200).json(dbRes);
@@ -65,11 +65,10 @@ router.get("/tours/:id", (req, res) => {
 router.post("/tours", uploader.single("tourPicture"), (req, res) => {
   if (req.file) req.body.tourPicture = req.file.secure_url;
   // console.log(req.file)
-
   const newTour = {
-    dates: [req.body.startDate, req.body.endDate],
     ...req.body,
-    languages: req.body.languages.split(",")
+    languages: req.body.languages.split(","),
+    guide: req.user._id
   };
 
   tourModel

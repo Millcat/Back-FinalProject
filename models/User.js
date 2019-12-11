@@ -11,10 +11,14 @@ const UserSchema = new Schema({
     type: String,
     default: "https://cdn.onlinewebfonts.com/svg/img_258083.png"
   },
-  tours: {
+  toursCreated: [{
     type: Schema.Types.ObjectId,
     ref: "Tour"
-  },
+  }], // 1 user peut créer plusieurs tours
+  boughtTours: [{
+    type: Schema.Types.ObjectId,
+    ref: "Tour"
+  }],
   bookings: {
     type: Schema.Types.ObjectId,
     ref: "Bookings"
