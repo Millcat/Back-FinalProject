@@ -5,7 +5,7 @@ const uploader = require("./../config/cloudinary");
 
 router.get("/tours", (req, res) => {
   tourModel
-    .find()
+    .find().populate("bookings")
     .then(dbRes => {
       res.status(200).json(dbRes);
     })
