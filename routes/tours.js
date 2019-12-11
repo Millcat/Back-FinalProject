@@ -5,8 +5,9 @@ const uploader = require("./../config/cloudinary");
 
 router.get("/tours", (req, res) => {
   tourModel
-    .find().populate("bookings")
+    .find()
     .then(dbRes => {
+      console.log(dbRes.guide)
       res.status(200).json(dbRes);
     })
     .catch(dbErr => {
@@ -51,7 +52,7 @@ router.get("/tours/:id", (req, res) => {
   tourModel
     .findById(req.params.id)
     .populate("bookings")
-    .populate("user")
+    .populate("guide")
     .then(dbRes => {
       console.log(dbRes);
       res.status(200).json(dbRes);
