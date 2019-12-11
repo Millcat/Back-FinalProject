@@ -38,12 +38,10 @@ server.use(
 const authRouter = require("./routes/auth");
 const toursRouter = require("./routes/tours");
 const bookingRouter = require("./routes/booking");
-// const shopCartRouter = require("./routes/shopcart");
 
 server.use(authRouter);
 server.use(toursRouter);
 server.use(bookingRouter);
-// server.use(shopCartRouter);
 
 server.listen(process.env.PORT, () => {
   console.log(
