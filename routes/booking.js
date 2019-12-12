@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const bookingModel = require("./../models/Booking");
 const tourModel = require("./../models/Tour");
+const userModel = require("./../models/User");
 
 router.post("/booking", (req, res) => {
   const bookingsFromShopCart = req.body;
@@ -17,6 +18,7 @@ router.post("/booking", (req, res) => {
         const booking = bookingsFromShopCart[i];
 
         return {
+          buyer: booking.buyer,
           tour: dbTour._id,
           date: dbTour.date,
           participants: Number(booking.participants),
