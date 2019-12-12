@@ -7,7 +7,7 @@ router.get("/tours", (req, res) => {
   tourModel
     .find()
     .then(dbRes => {
-      console.log(dbRes.guide)
+      console.log(dbRes.guide);
       res.status(200).json(dbRes);
     })
     .catch(dbErr => {
@@ -38,8 +38,8 @@ router.post("/toursFiltered", (req, res) => {
     .find(query)
     .populate("users")
     .then(dbRes => {
-      console.log("------------------");
-      console.log(dbRes);
+      // console.log("------------------");
+      // console.log(dbRes);
       res.status(200).json(dbRes);
     })
     .catch(dbErr => {
