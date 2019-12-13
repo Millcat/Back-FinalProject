@@ -24,6 +24,7 @@ const TourSchema = new Schema({
   description: String,
   duration: String,
   itinerary: [String],
+  time: String,
   meetingLocation: String,
   languages: {
     type: [String],
