@@ -5,7 +5,7 @@ const uploader = require("./../config/cloudinary");
 
 router.get("/tours", (req, res) => {
   tourModel
-    .find()
+    .find().populate("bookings")
     .then(dbRes => {
       console.log(dbRes.guide);
       res.status(200).json(dbRes);
@@ -64,6 +64,7 @@ router.get("/tours/:id", (req, res) => {
 
 // add protectUserRoute before uploader.single
 router.post("/tours", uploader.single("tourPicture"), (req, res) => {
+  console.log("body autocompletion", req.body)
   if (req.file) req.body.tourPicture = req.file.secure_url;
   // console.log(req.file)
   const newTour = {
